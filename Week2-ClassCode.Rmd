@@ -1,0 +1,197 @@
+---
+title: "Week 2 synchronous class code"
+date: "Sept 20, 2022"
+author: "Prof. Caetano"
+output:
+  pdf_document: default
+---
+
+The first part of this file has the code for our synchronous class, while the second part includes code from the videos for week 2. 
+
+# Clean Figures and Plots
+
+Last week we worked with the avatar data. Here is a bit of coding to help clean up the plots and tables that were used in last week's code.
+
+```{r}
+library(tidyverse)
+avatar_data <- read_csv("avatar.csv")
+```
+
+
+## Plots
+
+Here is a simple ggplot code to build a histogram.
+
+```{r}
+ggplot(data = avatar_data, aes(x=imdb_rating)) +
+  geom_histogram(colour="yellow", fill="yellow",
+                 bins=10)  
+```
+
+While the above histogram is great for exploratory data analysis, it is not quite clean enough to be in our report. We should add appropriate labels, ensure the colours make the plot digestible and remove the coded variable names.
+
+We can also use `echo=FALSE` to ensure that the code does not appear in the knitted pdf.
+ 
+```{r, echo=F, warning=FALSE}
+ggplot(data = avatar_data, aes(x=imdb_rating)) +
+  geom_histogram(colour="maroon", fill="gray", bins=10) +
+  labs(title = "Figure 1: Histogram of IMDb rating for lines of \nAvatar the last Airbender TV show", 
+       x="IMDb rating", y="Number of Lines") +   
+  theme_light()
+```
+
+
+## Tables 
+
+Here is the summary table constructed last week. 
+
+```{r}
+avatar_data %>% filter(character=="Aang" | character=="Katara") %>% 
+  group_by(character) %>% 
+  summarise(num_lines = n(),
+            prop_Appa = mean(mention_appa))
+```
+
+It is not quite "report ready" and so I can use the `kable()` function from the `knitr` library in conjunction with the `rename()` function to clean up the table. 
+
+```{r, echo=FALSE}
+
+library(knitr)
+avatar_data %>% filter(character=="Aang" | character=="Katara") %>% 
+  group_by(character) %>% 
+  summarise(num_lines = n(),
+            prop_Appa = mean(mention_appa)) %>% 
+  rename(`Number of lines` = num_lines, `proportion of lines mentioning Appa` = prop_Appa) %>% 
+  kable(caption = "Statistics about lines said by characters Aang and Katara")
+
+```
+
+Take a look at the result by knitting this Rmd to pdf (*Ctrl+Shift+K* or *Cmd+Shift+K*).
+
+
+# Quantile Functions
+
+In R there are base functions for each "well known" distribution (i.e., Normal, t, chi-square, F, gamma, etc.).
+
+To find quantiles associated with the distribution we can use `qnorm()` or `qt()` or `qchisq()`, etc. If you type in `?qnorm` R will give you some information about the function.
+
+```{r}
+?qnorm    # or can use help(qnorm)
+```
+
+Okay, let's try to find the 10th, 65th, 90th percentile of a standard normal. I.e., the quantiles of the standard normal that have 0.1, 0.65 and 0.9 to the left. I.e., For $Z \sim Normal(\mu = 0, \sigma=1)$ find $q, p, r$ such that $P(Z<q)=0.1$, $P(Z<p)=0.65$ and $P(Z<r)=0.9$
+
+```{r}
+### 10th, 60th, and 90th percentile
+
+```
+
+Due to symmetry of standard normal distribution around 0, we see that the 10th and 90th percentiles are negatives of one another. 
+
+Let's try again but for a $Normal(\mu=8, \sigma=2)$
+
+```{r}
+### 10th, 60th, and 90th percentile
+
+```
+
+Let's try again but for a $t_{df=9}$
+
+```{r}
+
+```
+
+Let's try something on our own. Find the critical value following 99% confidence interval when n=20.
+
+$$\bar{x} \pm t_{n-1} \dfrac{s}{\sqrt{n}}$$
+
+Go to pollev.com/sta to let us know what you get.
+
+
+
+
+Try on your own, using the above, to build a 95% confidence interval for the mean imdb_rating of the avatar data. 
+
+```{r}
+
+## My CI was (8.517845,  8.822155). You can compare with the COMPLETE-SOLUTIONS code.
+```
+
+
+# Distribution Functions
+
+In R there are base functions for each "well known" distribution (i.e., Normal, t, chi-square, F, gamma, etc.).
+
+To find probabilities associated with the distribution we can use `pnorm()` or `pt()` or `pchisq()`, etc. If you type in `?pchisq` R will give you some information about the function.
+
+```{r}
+?pchisq    # or can use help(pchisc)
+```
+
+Okay, let's try to find $P(Z < 0.45)$ for $Z \sim N(0,1)$. So the area to the left of 0.45 on a standard normal curve.
+
+```{r}
+
+```
+
+To find the area to the right, so $P(Z > 0.45)$ for $Z \sim N(0,1)$ we can try
+
+```{r}
+
+```
+
+
+Exercise: Take one to two minutes to try to find the following $P(4<X<7)$ for $X\sim Exponential(\beta = 2)$ where $\beta$ is the rate parameter. 
+
+```{r}
+
+
+```
+
+
+Great! Let's try another question on pollev.com/sta.
+
+
+# Simulation
+
+## Sample Function
+
+First let's get started with the `sample` function.
+
+```{r}
+help(sample) # or ?sample
+
+colour <- c("Red", "Blue", "Green", "Yellow", "Purple")
+# Sample 3 colours from the above 5
+
+
+```
+
+Let's try using the `set.seed()` function. 
+
+```{r}
+
+
+```
+
+Now, let's take a sample with replacement, of size 10, and let's say we know the population have 60% red and 10% of each other colour.
+
+```{r}
+
+
+```
+
+## Simulating from distributions
+
+Similar to `qnorm()` and `pnorm()` one can use `rnorm()` (or `r<well_known_distribution_name>()`) to simulate from a well known distribution.
+
+Exercise: Assume we know waiting times for a bus are usually distributed to be uniform of -1 to +4 minutes (i.e., one minute early to 4 minutes late) and you wait for the bus 10 times in a month. Simulate your ten waiting times.
+
+```{r}
+
+```
+
+
+
+
+
