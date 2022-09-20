@@ -236,32 +236,41 @@ Exercise: Assume we know waiting times for a bus are usually distributed to be u
 waiting_times <- runif(n=10, min=-1, max=4)
 
 waiting_times
-```title: "Untitled"
-author: "Samantha-Jo Caetano"
-date: "19/09/2022"
-output: pdf_document
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+Let's build a dataset/tibble that is about my experiences waiting for the bus. It will include how early/late the bus was (waiting_time), the colour of my shirt the day I was waiting  and the number of people also waiting at the bus stop.
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+```{r}
+set.seed(2022)
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+waiting_times <- runif(n=10, min=-1, max=4)
 
-```{r cars}
-summary(cars)
+shirt_colour <- sample(x=colour, size=10, replace=TRUE, prob=c(0.6, 0.1, 0.1, 0.1, 0.1))
+
+num_peeps_bus <- rpois(n=10, lambda = 3)
+
+my_bus_data <- tibble(waiting_times, shirt_colour, num_peeps_bus)
+
+glimpse(my_bus_data)
 ```
 
-## Including Plots
+What if instead you know that waiting_times and num_peeps_bus is correlated?
 
-You can also embed plots, for example:
+```{r}
+waiting_times <- runif(n=10, min=-1, max=4)
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+#hist(waiting_times)
+
+shirt_colour <- sample(x=colour, size=10, replace=TRUE, prob=c(0.6, 0.1, 0.1, 0.1, 0.1))
+
+num_peeps_bus <- round(waiting_times + rnorm(n=10, 1, 1))
+
+hist(num_peeps_bus)
+
+my_bus_data <- tibble(waiting_times, shirt_colour, num_peeps_bus)
+
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+
